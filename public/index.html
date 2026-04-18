@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام الترقيات العسكرية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="bg-layer"></div>
+  <div class="toast-box" id="toastBox"></div>
+
+  <main class="shell">
+    <section id="loginView">
+      <div class="card auth-card">
+        <div class="badge"><i class="fas fa-shield-halved"></i> نظام الترقيات العسكرية</div>
+        <div class="hero small-hero">
+          <h1>دخول المستخدم</h1>
+          <p class="muted">أدخل الرمز الخاص بك للمتابعة</p>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="userCode">الرمز</label>
+          <input id="userCode" class="input big-input" type="text" autocomplete="off" placeholder="MIL-XXXXXX">
+        </div>
+
+        <button id="userLoginBtn" class="btn btn-primary full"><i class="fas fa-arrow-left"></i> دخول</button>
+
+        <div class="hero-actions">
+          <button id="adminOpenBtn" class="btn btn-outline"><i class="fas fa-lock"></i> دخول الإدارة</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="userView" class="hidden">
+      <header class="hero">
+        <div class="badge"><i class="fas fa-shield-halved"></i> نظام الترقيات العسكرية</div>
+        <h1>ترقية من <span class="crossed">فريق أول</span> إلى <span class="accent">فريق أول ركن</span></h1>
+      </header>
+
+      <div class="card date-card">
+        <div class="date-item">
+          <span>بداية الحسبة</span>
+          <strong id="startDate">--</strong>
+        </div>
+        <div class="date-center">
+          <span id="periodText">--</span>
+        </div>
+        <div class="date-item">
+          <span>نهاية الحسبة</span>
+          <strong id="endDate">--</strong>
+        </div>
+      </div>
+
+      <div id="discountBanner" class="card banner hidden"></div>
+
+      <div class="section-title"><i class="fas fa-list-check"></i> متطلبات الترقية</div>
+      <div id="requirementsBox" class="stack"></div>
+
+      <div class="card progress-card">
+        <div class="row spread">
+          <div class="section-title" style="margin:0"><i class="fas fa-chart-simple"></i> التقدم</div>
+          <strong id="progressText" class="accent">0%</strong>
+        </div>
+        <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><i class="fas fa-file-lines"></i> استبيان الدورة العسكرية</div>
+        <div class="grid two-col">
+          <div class="field-group">
+            <label class="field-label" for="courseDate">يوم الدورة</label>
+            <input id="courseDate" class="input" type="date">
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="courseTime">الساعة</label>
+            <input id="courseTime" class="input" type="time">
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">منظمين الدورة <span class="hint">الحد من 2 إلى 4</span></label>
+          <div id="organizersBox"></div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="courseName">اسم الدورة</label>
+          <input id="courseName" class="input" type="text" placeholder="اسم الدورة العسكرية">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="courseAbout">عن شنو بتكون الدورة</label>
+          <input id="courseAbout" class="input" type="text" placeholder="وصف مختصر لمحتوى الدورة">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="courseDetails">شرح تفصيلي</label>
+          <textarea id="courseDetails" class="input textarea" placeholder="اكتب الشرح التفصيلي الكامل..."></textarea>
+        </div>
+
+        <button id="submitSurveyBtn" class="btn btn-primary full"><i class="fas fa-paper-plane"></i> تسليم الاستبيان</button>
+      </div>
+
+      <div id="notesSection" class="hidden">
+        <div class="section-title"><i class="fas fa-bullhorn"></i> ملاحظات الإدارة</div>
+        <div id="notesList" class="stack"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><i class="fas fa-circle-info"></i> ملاحظات مهمة</div>
+        <div class="stack">
+          <div class="note"><div class="note-index">1</div><div>سلّم الاستبيان قبل الدورة بـ 3 أيام على الأقل.</div></div>
+          <div class="note"><div class="note-index">2</div><div>يجب أن يكون يوم الدورة داخل فترة الحسبة.</div></div>
+          <div class="note"><div class="note-index">3</div><div>الحد الأقصى للمنظمين 4.</div></div>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <button id="logoutBtn" class="btn btn-outline"><i class="fas fa-right-from-bracket"></i> تسجيل خروج</button>
+      </div>
+    </section>
+
+    <section id="adminView" class="hidden">
+      <div id="adminLoginCard" class="card auth-card compact">
+        <div class="badge"><i class="fas fa-crown"></i> لوحة الإدارة</div>
+        <div class="hero small-hero">
+          <h1>دخول الإدارة</h1>
+          <p class="muted">أدخل كلمة المرور</p>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="adminPassword">كلمة المرور</label>
+          <input id="adminPassword" class="input" type="password" placeholder="كلمة مرور الإدارة">
+        </div>
+        <div class="row gap-sm full">
+          <button id="adminLoginBtn" class="btn btn-primary full"><i class="fas fa-arrow-left"></i> دخول</button>
+          <button id="adminBackBtn" class="btn btn-outline full"><i class="fas fa-arrow-right"></i> رجوع</button>
+        </div>
+      </div>
+
+      <div id="adminPanel" class="hidden">
+        <header class="hero">
+          <div class="badge"><i class="fas fa-crown"></i> لوحة تحكم الإدارة</div>
+          <h1>إدارة نظام الترقيات</h1>
+        </header>
+
+        <div id="summaryStats" class="stats-grid"></div>
+
+        <div class="grid two-col admin-grid">
+          <div class="card">
+            <div class="section-title"><i class="fas fa-key"></i> الأكواد</div>
+
+            <div class="field-group">
+              <label class="field-label" for="newCode">الرمز</label>
+              <div class="row gap-sm full wrap-mobile">
+                <input id="newCode" class="input" type="text" placeholder="MIL-XXXXXX">
+                <button id="generateCodeBtn" class="btn btn-outline btn-sm"><i class="fas fa-shuffle"></i> توليد</button>
+              </div>
+            </div>
+
+            <div class="grid two-col">
+              <div class="field-group">
+                <label class="field-label" for="newCodeStart">بداية الحسبة</label>
+                <input id="newCodeStart" class="input" type="date">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="newCodeEnd">نهاية الحسبة</label>
+                <input id="newCodeEnd" class="input" type="date">
+              </div>
+            </div>
+
+            <div class="field-group inline-check">
+              <input id="isTemporaryCode" type="checkbox">
+              <label for="isTemporaryCode">كود مؤقت</label>
+            </div>
+
+            <div id="temporaryWrap" class="field-group hidden">
+              <label class="field-label" for="temporaryExpiresAt">وقت انتهاء الكود المؤقت</label>
+              <input id="temporaryExpiresAt" class="input" type="datetime-local">
+              <div class="hint">الكود المؤقت ينتهي بالوقت المحدد ويُستخدم مرة واحدة.</div>
+            </div>
+
+            <div class="row gap-sm full wrap-mobile">
+              <button id="createCodeBtn" class="btn btn-primary full"><i class="fas fa-plus"></i> إضافة الكود</button>
+              <button id="deleteCodeBtn" class="btn btn-danger full"><i class="fas fa-trash"></i> حذف الكود</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-title"><i class="fas fa-percent"></i> الخصومات</div>
+            <div class="field-group">
+              <label class="field-label" for="discountPct">نسبة الخصم</label>
+              <input id="discountPct" class="input" type="number" min="1" max="99" placeholder="25">
+            </div>
+            <div class="grid two-col">
+              <div class="field-group">
+                <label class="field-label" for="discountStart">بداية الخصم</label>
+                <input id="discountStart" class="input" type="datetime-local">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="discountEnd">نهاية الخصم</label>
+                <input id="discountEnd" class="input" type="datetime-local">
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="discountReason">سبب الخصم</label>
+              <input id="discountReason" class="input" type="text" placeholder="اختياري">
+            </div>
+            <button id="createDiscountBtn" class="btn btn-primary full"><i class="fas fa-floppy-disk"></i> حفظ الخصم</button>
+          </div>
+        </div>
+
+        <div class="grid two-col admin-grid">
+          <div class="card">
+            <div class="section-title"><i class="fas fa-note-sticky"></i> الملاحظات</div>
+            <div class="field-group">
+              <label class="field-label" for="adminNoteText">إضافة ملاحظة</label>
+              <textarea id="adminNoteText" class="input textarea" placeholder="اكتب الملاحظة التي تظهر للمستخدمين"></textarea>
+            </div>
+            <button id="addNoteBtn" class="btn btn-primary full"><i class="fas fa-plus"></i> إضافة الملاحظة</button>
+          </div>
+
+          <div class="card">
+            <div class="section-title"><i class="fas fa-circle-info"></i> حالة النظام</div>
+            <div class="stack small-text">
+              <div class="note"><div class="note-index"><i class="fas fa-share-nodes"></i></div><div>الأكواد الآن محفوظة في قاعدة البيانات، لذلك أي كود تنشئه سيعمل عند أي مستخدم يفتح نفس الموقع.</div></div>
+              <div class="note"><div class="note-index"><i class="fas fa-clock"></i></div><div>الكود المؤقت ينتهي بوقت محدد ويُقفل بعد أول استخدام.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid two-col admin-grid">
+          <div class="card">
+            <div class="section-title"><i class="fas fa-list"></i> الأكواد الحالية</div>
+            <div id="codesList" class="stack"></div>
+          </div>
+          <div class="card">
+            <div class="section-title"><i class="fas fa-tags"></i> الخصومات الحالية</div>
+            <div id="discountsList" class="stack"></div>
+          </div>
+        </div>
+
+        <div class="grid two-col admin-grid">
+          <div class="card">
+            <div class="section-title"><i class="fas fa-bell"></i> ملاحظات الإدارة</div>
+            <div id="adminNotesList" class="stack"></div>
+          </div>
+          <div class="card">
+            <div class="section-title"><i class="fas fa-chart-line"></i> التقدم المحفوظ</div>
+            <div id="progressList" class="stack"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title"><i class="fas fa-inbox"></i> الاستبيانات المُسلّمة</div>
+          <div id="submissionsList" class="stack"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
