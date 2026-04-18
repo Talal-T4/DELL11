@@ -291,6 +291,20 @@ function bindAdminListActions() {
       await handleDeleteNote(noteId);
     });
   });
+
+  document.querySelectorAll('[data-delete-discount]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const discountId = button.getAttribute('data-delete-discount');
+      await handleDeleteDiscount(discountId);
+    });
+  });
+
+  document.querySelectorAll('[data-delete-submission]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const submissionId = button.getAttribute('data-delete-submission');
+      await handleDeleteSubmission(submissionId);
+    });
+  });
 }
 
 function renderAdminDashboard(data) {
@@ -326,8 +340,15 @@ function renderAdminDashboard(data) {
   }, 'لا توجد أكواد');
 
   renderList('discountsList', data.discounts, (row) => `
-    <div class="list-title">خصم ${row.pct}%</div>
-    <div class="list-meta">${fmtDateTime(row.starts_at)} ← ${fmtDateTime(row.ends_at)}</div>
+    <div class="list-head">
+      <div>
+        <div class="list-title">خصم ${row.pct}%</div>
+        <div class="list-meta">${fmtDateTime(row.starts_at)} ← ${fmtDateTime(row.ends_at)}</div>
+      </div>
+      <div class="list-actions">
+        <button class="btn btn-danger btn-sm" data-delete-discount="${row.id}"><i class="fas fa-trash"></i> حذف</button>
+      </div>
+    </div>
     <div class="list-body">${escapeHtml(row.reason || 'بدون سبب')}</div>
   `, 'لا توجد خصومات');
 
@@ -354,8 +375,15 @@ function renderAdminDashboard(data) {
   }, 'لا يوجد تقدم محفوظ');
 
   renderList('submissionsList', data.submissions, (row) => `
-    <div class="list-title">${escapeHtml(row.course_name)}</div>
-    <div class="list-meta">الكود: ${escapeHtml(row.access_codes?.code || '—')} — ${fmtDate(row.course_date)} ${escapeHtml(row.course_time || '')}</div>
+    <div class="list-head">
+      <div>
+        <div class="list-title">${escapeHtml(row.course_name)}</div>
+        <div class="list-meta">الكود: ${escapeHtml(row.access_codes?.code || '—')} — ${fmtDate(row.course_date)} ${escapeHtml(row.course_time || '')}</div>
+      </div>
+      <div class="list-actions">
+        <button class="btn btn-danger btn-sm" data-delete-submission="${row.id}"><i class="fas fa-trash"></i> حذف الاستبيان</button>
+      </div>
+    </div>
     <div class="list-body">${escapeHtml(row.course_about)}<br>${escapeHtml(row.course_details)}<br>المنظمون: ${escapeHtml((row.organizers || []).map((item) => `${item.name}${item.rank ? ` (${item.rank})` : ''}`).join('، '))}</div>
   `, 'لم يتم تسليم أي استبيان');
 
@@ -431,6 +459,36 @@ async function handleAddNote() {
     });
     toast('تمت إضافة الملاحظة');
     $('adminNoteText').value = '';
+    await loadAdminDashboard();
+  } catch (error) {
+    toast(error.message, 'error');
+  }
+}
+
+async function handleDeleteDiscount(discountId) {
+  if (!discountId) return;
+  if (!window.confirm('تأكيد حذف الخصم؟')) return;
+  try {
+    await api('admin-delete-discount', {
+      password: state.adminPassword,
+      discountId
+    });
+    toast('تم حذف الخصم');
+    await loadAdminDashboard();
+  } catch (error) {
+    toast(error.message, 'error');
+  }
+}
+
+async function handleDeleteSubmission(submissionId) {
+  if (!submissionId) return;
+  if (!window.confirm('تأكيد حذف الاستبيان المُسلّم؟')) return;
+  try {
+    await api('admin-delete-submission', {
+      password: state.adminPassword,
+      submissionId
+    });
+    toast('تم حذف الاستبيان');
     await loadAdminDashboard();
   } catch (error) {
     toast(error.message, 'error');
